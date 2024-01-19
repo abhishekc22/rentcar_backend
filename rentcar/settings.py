@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+# decouple library to read these values from the .env/
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,8 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-*5o%8r9-)1u7wg$4m3z&w64&0og48^vjomtzt7wwr$x--sxb2x"
+# Secret Key
+SECRET_KEY = config("SECRET_KEY")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -70,10 +76,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "rentcar.urls"
 
-# the domain of frontetnd appilction
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-]
+# CORS Allowed Origins
+CORS_ALLOWED_ORIGINS = [config("CORS_ALLOWED_ORIGINS")]
+
 CORS_ALLOWED_METHODS = [
     "GET",
     "POST",
@@ -108,14 +113,16 @@ ASGI_APPLICATION = "rentcar.asgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
+# Database Configuration
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "rentservice",
-        "USER": "postgres",
-        "PASSWORD": "234264",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "ENGINE": config("DB_ENGINE"),
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASSWORD"),
+        "HOST": config("DB_HOST"),
+        "PORT": config("DB_PORT"),
     }
 }
 
@@ -244,30 +251,30 @@ SIMPLE_JWT = {
 # AWS_QUERYSTRING_AUTH=False
 
 
-# cloudinary image  storing
+
+# Cloudinary
 CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": "dhbzojgfp",
-    "API_KEY": "653972398443835",
-    "API_SECRET": "_GQghPyGV6NkCEuL-CXICK8iglM",
+    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": config("CLOUDINARY_API_KEY"),
+    "API_SECRET": config("CLOUDINARY_API_SECRET"),
 }
 
-# email configration
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "abhishek234264@gmail.com"
-EMAIL_HOST_PASSWORD = "bxheiaxyiqjiroip"
+# Email Configuration
+EMAIL_BACKEND = config("EMAIL_BACKEND")
+EMAIL_HOST = config("EMAIL_HOST")
+EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
+EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+
+# Celery Configuration
+CELERY_BROKER_URL = config("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND")
+CELERY_ACCEPT_CONTENT = config("CELERY_ACCEPT_CONTENT", default=["application/json"], cast=lambda v: [s.strip() for s in v.split(",")])
+CELERY_RESULT_SERIALIZER = config("CELERY_RESULT_SERIALIZER")
+CELERY_TASK_SERIALIZER = config("CELERY_TASK_SERIALIZER")
+CELERY_TIMEZONE = config("CELERY_TIMEZONE")
 
 
-# celery_config.py
-
-CELERY_BROKER_URL = "redis://127.0.0.1:6379"
-CELERY_RESULT_BACKEND = "django-db"
-CELERY_ACCEPT_CONTENT = ["application/json"]
-CELERY_RESULT_SERIALIZER = "json"
-CELERY_TASK_SERIALIZER = "json"
-CELERY_TIMEZONE = "Asia/Kolkata"
-
-# celery beat setting
-CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+# Celery Beat Scheduler
+CELERY_BEAT_SCHEDULER = config("CELERY_BEAT_SCHEDULER")

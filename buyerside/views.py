@@ -229,8 +229,8 @@ class Bookingpayment(APIView):
                 )
 
                 # in this   token and  sid  used  to authenticate  twilo( sandbox3rd party api)
-                sid = "AC57b99cd11c54d16e6f6a529e672ea491"
-                auth = "2e04618bc0e9944459e365a8d8ed8e38"
+                sid =  config("TWILIO_SID")
+                auth = config("TWILIO_AUTH_TOKEN")
 
                 client = Client(sid, auth)
                 original_string = new_booking.buyer.user.phone_number
@@ -277,10 +277,9 @@ import stripe
 from rest_framework.response import Response
 from django.shortcuts import redirect
 
-# This is your test secret API key.
-
-stripe.api_key = "sk_test_51OTJaXSAF3AtQFOEZcbPgmoT85USJJbCM3AQvW5Ka0ZJrNx05clrkYkxSvRu42uYFKnAXa0p6K5GkJFdgNdxFWWV003ZeFkWuy"
-
+from decouple import config
+# Set the Stripe API key from the .env file
+stripe.api_key = config("STRIPE_API_KEY")
 
 class Stripcheckout(APIView):
     def post(self, request):
