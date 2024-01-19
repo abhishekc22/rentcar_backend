@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Booking Notification</title>
+</head>
+<body>
+    <p>Hello {{ booking.car.partner.user.username }},</p>
+    <p>You have a new booking from:</p>
+    <p>Buyername: {{ booking.buyer.user.username}}</p>
+    <p>phonenumber: {{ booking.buyer.user.phone_number}}</p>
+    <p>Pickup Date: {{ booking.pickupdate }}</p>
+    <p>Return Date: {{ booking.returndate }}</p>
+    <p>amount: {{ booking.car.partner.user.wallet }}</p>
+
+    <!-- Add more details as needed -->
+
+    <!-- You can include React components or static HTML here -->
+    <!-- Example: -->
+    <div id="react-root">
+      
+        <!-- Your React component code here -->
+    </div>
+
+    <p>Thank you!</p>
+</body>
+</html>
