@@ -29,7 +29,6 @@ class Adminuserlist(generics.ListCreateAPIView):
 
 class Admincarlist(generics.ListCreateAPIView):
     queryset = Rentcar.objects.all()
-    print(queryset, "----------------")
     serializer_class = Carlistserializer
     permission_classes = [is_admin]
     pagination_class = Admincarlistpagination
