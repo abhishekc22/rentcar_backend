@@ -30,9 +30,9 @@ SECRET_KEY = config("SECRET_KEY")
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -77,15 +77,17 @@ MIDDLEWARE = [
 ROOT_URLCONF = "rentcar.urls"
 
 # CORS Allowed Origins
-CORS_ALLOWED_ORIGINS = [config("CORS_ALLOWED_ORIGINS")]
+# CORS_ALLOWED_ORIGINS = [config("CORS_ALLOWED_ORIGINS")]
 
-CORS_ALLOWED_METHODS = [
-    "GET",
-    "POST",
-    "DELETE",
-    "PUT",
-    "PATCH",
-]
+CORS_ALLOW_ALL_ORIGINS = True
+
+# CORS_ALLOWED_METHODS = [
+#     "GET",
+#     "POST",
+#     "DELETE",
+#     "PUT",
+#     "PATCH",
+# ]
 
 
 # CORS_ALLOW_ALL_ORIGINS = True
@@ -122,7 +124,7 @@ DATABASES = {
         "USER": config("DB_USER"),
         "PASSWORD": config("DB_PASSWORD"),
         "HOST": config("DB_HOST"),
-        "PORT": config("DB_PORT"),
+        "PORT": '',
     }
 }
 
