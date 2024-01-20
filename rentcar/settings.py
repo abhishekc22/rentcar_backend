@@ -80,38 +80,6 @@ ROOT_URLCONF = "rentcar.urls"
 # CORS_ALLOWED_ORIGINS = [config("CORS_ALLOWED_ORIGINS")]
 
 CORS_ALLOW_ALL_ORIGINS = True
-<<<<<<< HEAD
-CORS_ALLOWED_METHODS = [
-     "GET",
-     "POST",
-     "DELETE",
-     "PUT",
-     "PATCH",
- ]
-=======
-
-<<<<<<< HEAD
-CORS_ALLOWED_METHODS = [
-    "GET",
-    "POST",
-    "DELETE",
-    "PUT",
-    "PATCH",
-]
->>>>>>> f3b76d48d4558bf7f8a3776757b058f1aeed000d
-=======
-# CORS_ALLOWED_METHODS = [
-#     "GET",
-#     "POST",
-#     "DELETE",
-#     "PUT",
-#     "PATCH",
-# ]
->>>>>>> a22f59d308cca46f7a76f99f7ba1fe130639dd98
-
-
-# CORS_ALLOW_ALL_ORIGINS = True
-
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
