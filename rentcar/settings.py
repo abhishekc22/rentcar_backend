@@ -90,6 +90,7 @@ CORS_ALLOWED_METHODS = [
  ]
 =======
 
+<<<<<<< HEAD
 CORS_ALLOWED_METHODS = [
     "GET",
     "POST",
@@ -98,6 +99,15 @@ CORS_ALLOWED_METHODS = [
     "PATCH",
 ]
 >>>>>>> f3b76d48d4558bf7f8a3776757b058f1aeed000d
+=======
+# CORS_ALLOWED_METHODS = [
+#     "GET",
+#     "POST",
+#     "DELETE",
+#     "PUT",
+#     "PATCH",
+# ]
+>>>>>>> a22f59d308cca46f7a76f99f7ba1fe130639dd98
 
 
 # CORS_ALLOW_ALL_ORIGINS = True
