@@ -127,7 +127,7 @@ DATABASES = {
         "PORT": '',
     }
 }
-
+CSRF_TRUSTED_ORIGINS = ['https://carway.vintiq.shop','http://*.127.0.0.1']
 # connecting the  redix  to the channels for the  communcation. Redis as the backend for managing communication between different components of the application through channels.Redis channel layer, allowing for better load balancing and scalability.
 # thisiis basically  work similar to ' RedisChannelLayer' message broker.
 #  Redis is an in-memory data store that can be used as a fast and efficient key-value store. It is often used for caching, session storage, and message brokering.
