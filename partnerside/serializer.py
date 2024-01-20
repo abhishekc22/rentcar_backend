@@ -20,7 +20,7 @@ class AddcarSerializer(serializers.ModelSerializer):
         print(partner_data, "8888888888")
         
         # Create the Rentcar instance without the 'partner' field
-        rentcar = Rentcar.objects.create(**validated_data, partner=partner)
+        rentcar = Rentcar.objects.create(**validated_data, partner=partner_data)
 
         rentcar.save()
         return rentcar
