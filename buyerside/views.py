@@ -328,8 +328,8 @@ class Stripcheckout(APIView):
                 ],
                 mode="payment",
                 customer_email=buyer.user.email,  # Include customer's email
-                cancel_url="http://localhost:5173/?canceled=true",
-                success_url=f"http://localhost:5173/buyer/paymentsuccess?success=true&session_id={{CHECKOUT_SESSION_ID}}&pickupdate={pickupdate}&returndate={returndate}&car_location={car_location}&buyer_name={buyer_name}&total_amount={total_amount}",
+                cancel_url="https://carway.vercel.app/?canceled=true",
+                success_url=f"https://carway.vercel.app/buyer/paymentsuccess?success=true&session_id={{CHECKOUT_SESSION_ID}}&pickupdate={pickupdate}&returndate={returndate}&car_location={car_location}&buyer_name={buyer_name}&total_amount={total_amount}",
             )
 
             return Response(status=status.HTTP_200_OK, data={"url": session.url})

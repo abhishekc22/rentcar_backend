@@ -125,7 +125,7 @@ DATABASES = {
         "PASSWORD": config("DB_PASSWORD"),
         "HOST": config("DB_HOST"),
         "PORT": '',
-    }
+    }   
 }
 CSRF_TRUSTED_ORIGINS = ['https://carway.vintiq.shop','http://*.127.0.0.1']
 
