@@ -81,13 +81,13 @@ ROOT_URLCONF = "rentcar.urls"
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-# CORS_ALLOWED_METHODS = [
-#     "GET",
-#     "POST",
-#     "DELETE",
-#     "PUT",
-#     "PATCH",
-# ]
+CORS_ALLOWED_METHODS = [
+    "GET",
+    "POST",
+    "DELETE",
+    "PUT",
+    "PATCH",
+]
 
 
 # CORS_ALLOW_ALL_ORIGINS = True
