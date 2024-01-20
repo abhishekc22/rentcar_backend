@@ -13,12 +13,15 @@ class AddcarSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # Retrieve the 'partner' data if present
         partner_data = validated_data.pop("partner", None)
+        partner = Parnterorofile.objects.get(
+            id=partner_data
+        )
 
         print(partner_data, "8888888888")
+        
         # Create the Rentcar instance without the 'partner' field
-        rentcar = Rentcar.objects.create(**validated_data)
+        rentcar = Rentcar.objects.create(**validated_data, partner=partner)
 
-        rentcar.partner = partner_data
         rentcar.save()
         return rentcar
 
