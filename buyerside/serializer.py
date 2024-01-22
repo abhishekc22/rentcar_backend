@@ -63,3 +63,12 @@ class BookingSerializerall(serializers.ModelSerializer):
         model = Booking
         fields = "__all__"
         depth = 4
+
+class Carfilterserializer(serializers.ModelSerializer):
+    class Meta:
+        model=Rentcar
+        fields= "__all__"
+        depth = 2
+
+
+

@@ -5,12 +5,14 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from accounts.models import Buyerprofile, Customuser, Adminprofile, Parnterorofile
 from accounts.serializer import Signupserializer
+from .Signals import send_booking_notification
 from datetime import datetime
 from .serializer import (
     Buyerprofileserializer,
     Customuserserializer,
     Singlecarserializer,
     BookingSerializerall,
+    Carfilterserializer
 )
 from partnerside.models import Rentcar
 from django.utils import timezone
@@ -140,7 +142,7 @@ class Bookingcar(APIView):
                     total_amount=price,
                 )
                 serializer = Singlecarserializer(car)
-                print(serializer.data, "---------------------")
+             
                 data = {
                     "message": "Booking created successfully",
                     "ownername": new_booking.car.partner.user.username,
@@ -172,6 +174,7 @@ from twilio.rest import Client
 
 class Bookingpayment(APIView):
     def post(self, request):
+        print(request.data,'8888888888888888888')
         try:
             data = request.data
             print(data, "----------")
@@ -179,9 +182,12 @@ class Bookingpayment(APIView):
             buyer_name = request.data.get("buyer_name")
             returndate = request.data.get("returndate")
             car_location = request.data.get("car_location")
+            print(car_location,'>>>>>>>>>>>>>>>>>>>>')
             total_amount = Decimal(request.data.get("total_amount"))
             car = Rentcar.objects.filter(location=car_location).first()
+            print(car,'wwwwwwwwwwwwwwww')
             buyer = Buyerprofile.objects.filter(user__username=buyer_name).first()
+            print(buyer,'wwwwwwwwwwwwwwwwwwwwwwwwwwww')
 
             try:
                 pickupdate = datetime.strptime(pickupdate, "%Y-%m-%d").date()
@@ -221,6 +227,7 @@ class Bookingpayment(APIView):
                     is_is_reserved=True,
                 )
                 new_booking.save()
+                print(new_booking,'hoooooooooooooooooooooooooo')
                 image = new_booking.car.carimage1
 
                 # Trigger the email notification signal manually
@@ -234,7 +241,7 @@ class Bookingpayment(APIView):
 
                 client = Client(sid, auth)
                 original_string = new_booking.buyer.user.phone_number
-                print("looooooo77777oooooooo")
+               
 
                 #  then we  can send  only  the  messages
                 # image_url = f'https://example.com/car_images/{new_booking.car.carimage1}'  # Replace with the actual logic to get the image UR
@@ -245,14 +252,16 @@ class Bookingpayment(APIView):
                         from_="whatsapp:+14155238886",
                         body=whatsapp_message,
                     )
-                    print("looooooooooooooo")
+                  
                 except Exception as e:
                     print(f"Error sending WhatsApp notification: {e}")
                     print(f"Twilio Response: {e.msg}")
 
                 # Update partner's wallet
                 partner_user = new_booking.car.partner.user
+                print(partner_user,'------------------------')
                 partner_user.wallet += new_booking.total_amount * Decimal("0.75")
+                print(partner_user.wallet ,'9999999999999999999999999999999')
                 partner_user.save()
 
                 # Update admin's wallet
@@ -284,7 +293,7 @@ stripe.api_key = config("STRIPE_API_KEY")
 class Stripcheckout(APIView):
     def post(self, request):
         try:
-            print(request.data, "***********************")
+          
             total_amount = int(request.data["total_amount"])
             pickupdate = request.data.get("pickupdate")
             returndate = request.data.get("returndate")
@@ -328,8 +337,8 @@ class Stripcheckout(APIView):
                 ],
                 mode="payment",
                 customer_email=buyer.user.email,  # Include customer's email
-                cancel_url="https://carway.vercel.app/?canceled=true",
-                success_url=f"https://carway.vercel.app/buyer/paymentsuccess?success=true&session_id={{CHECKOUT_SESSION_ID}}&pickupdate={pickupdate}&returndate={returndate}&car_location={car_location}&buyer_name={buyer_name}&total_amount={total_amount}",
+                cancel_url="https://carway.vintiq.shop/?canceled=true",
+                success_url=f"https://carway.vintiq.shop/buyer/paymentsuccess?success=true&session_id={{CHECKOUT_SESSION_ID}}&pickupdate={pickupdate}&returndate={returndate}&car_location={car_location}&buyer_name={buyer_name}&total_amount={total_amount}",
             )
 
             return Response(status=status.HTTP_200_OK, data={"url": session.url})
@@ -346,7 +355,6 @@ class Stripcheckout(APIView):
 
 class Buyer_bookedcar(generics.ListAPIView):
     serializer_class = BookingSerializerall
-    permission_classes = [Isbuyer]
 
     def get_queryset(self):
         user_id = self.kwargs["user_id"]
@@ -366,16 +374,13 @@ class Get_partner(APIView):
             partner_ids = bookings.values_list(
                 "car__partner__user__username", flat=True
             ).distinct()
-            print(partner_ids, "-9696-----8----======================++++++++++")
             partners_data = []
             for partner_username in partner_ids:
-                print(partner_username, "++++++++++++")
                 partner = Parnterorofile.objects.filter(
                     user__username=partner_username
                 ).first()
 
                 if partner:
-                    print(partner.user.id, "-----------*****************")
                     partners_data.append(
                         {
                             "id": partner.user.id,
@@ -421,9 +426,9 @@ class Cancelcar(APIView):
                 booking_obj.save()
 
                 amount = Decimal(str(booking_obj.total_amount))
-                print(amount, "**********")
+
                 partner = amount * Decimal("0.75")
-                print(partner, "----------")
+                print(partner, "-----cancel car  for  partner-----")
                 admin = amount * Decimal("0.25")
                 print(admin, "--------")
 
@@ -461,3 +466,28 @@ class BuyerWallet(generics.RetrieveAPIView):
             return Response({"wallet_amount": buyer.wallet})
         except Customuser.DoesNotExist:
             return Response({"error": "Buyer not found"}, status=404)
+        
+
+
+
+class FilterLocation(APIView):
+    def get(self, request):
+        print(request,'888888888')
+        try:
+            locations= request.query_params.get('location')
+            print(locations,'5555555555555555555555555555')
+            get_palce=Rentcar.objects.filter(location=locations,is_blocked=True, is_deleted=False)
+
+            print(get_palce,'5656565')
+            if  not get_palce:
+                raise ValueError("ypu  are  selected  wrong  area")
+            else:
+                serializer =Carfilterserializer (get_palce, many=True)
+                return Response(serializer.data)
+
+
+        except Customuser.DoesNotExist:
+            return Response({"error": "Buyer not found"}, status=404)
+
+
+       

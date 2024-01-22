@@ -19,6 +19,7 @@ from .serializer import BuyerSerializer
 from datetime import date
 from .serializer import BookingSerializer
 from decimal import Decimal
+from buyerside.pagination import Carlistpagination
 
 
 class Addcarview(APIView):
@@ -99,6 +100,8 @@ class Partner_profile(APIView):
 class Partnercar(generics.ListAPIView):
     serializer_class = Partnercarserializer
 
+    
+
     def get(self, request, *args, **kwargs):
         partner_id = self.kwargs["partner_id"]
         user = Customuser.objects.filter(id=partner_id).first()
@@ -107,18 +110,20 @@ class Partnercar(generics.ListAPIView):
             partner=partner, is_blocked=True, is_deleted=False
         )
         serializer = self.get_serializer(queryset, many=True)
+    
         return Response(serializer.data)
 
 
 class partnerbooking(generics.ListAPIView):
     serializer_class = BookingSerializerall
+    pagination_class =Carlistpagination
 
     def get_queryset(self):
         partner_id = self.kwargs["partner_id"]
         user = Customuser.objects.filter(id=partner_id).first()
         partner = Parnterorofile.objects.filter(user=user).first()
         buyer = Booking.objects.filter(car__partner=partner).order_by("-id")
-        print(buyer, "888888888888888888888")
+        
         return buyer
 
 
@@ -256,3 +261,50 @@ class BookingRetrieveUpdateView(generics.RetrieveUpdateAPIView):
             instance.save()
 
         return Response(serializer.data)
+    
+
+
+from django.db.models import Count
+class Partnerdashboard(APIView):
+    def get(self, request, partnerid):
+        print(partnerid, '88888888888')
+        try:
+            user = Customuser.objects.get(id=partnerid) 
+
+
+            partner = Parnterorofile.objects.get(user=user)
+    
+
+            partner_cars = Rentcar.objects.filter(partner=partner)
+     
+
+            # Count the number of bookings for each car
+            total_bookings_count = Booking.objects.filter(car__in=partner_cars).count()
+            print(total_bookings_count,'222222222222222')
+
+
+            amount = user.wallet
+            print(amount,'33333333')
+            return Response(
+                {
+                    "message": "User found",
+                    "wallet": amount,
+                    "total_booking_amount":total_bookings_count, 
+                 
+                },
+                status=status.HTTP_200_OK,
+            )
+
+            
+
+        except Customuser.DoesNotExist:
+            print("User not found")
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        except Parnterorofile.DoesNotExist:
+            print("Partner profile not found")
+            return Response({"error": "Partner profile not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+            print("Exception:", e)
+            return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)

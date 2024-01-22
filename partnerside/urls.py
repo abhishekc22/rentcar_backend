@@ -22,4 +22,6 @@ urlpatterns = [
         BookingRetrieveUpdateView.as_view(),
         name="booking-retrieve-update",
     ),
+
+    path('partnerdashboard/<int:partnerid>/',Partnerdashboard.as_view(),name='partnerdashboard'),
 ]

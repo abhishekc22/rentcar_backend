@@ -13,4 +13,5 @@ urlpatterns = [
     path("get_partner/<int:byer_id>/", Get_partner.as_view(), name="get_partner"),
     path("cancel_order/<int:id>/", Cancelcar.as_view(), name="cancelorder"),
     path("wallet/<int:id>/", BuyerWallet.as_view(), name="wallet"),
+    path("buyerfilter/",FilterLocation.as_view(),name='filterloaction'),
 ]
